@@ -1,0 +1,13 @@
+{
+  "message": "Route has been created",
+  "route": {
+      "description": "new forward",
+      "created_at": "Wed, 15 Feb 2012 13:03:31 GMT",
+      "actions": [
+          "forward(\"https://railslove.dealbaseapp.com/callback\")"
+      ],
+      "priority": 1,
+      "expression": "match_recipient(\".*@railslove.dealbaseapp.com\")",
+      "id": "4f3bad2335335426750048c6"
+  }
+}
