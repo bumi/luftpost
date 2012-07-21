@@ -64,4 +64,24 @@ class Luftpost::MailgunTest < MiniTest::Unit::TestCase
       assert @mailgun_for_text_parsing.instructions_only?
     end
   end
+  
+  class Attributes < self
+    def setup
+      @mailgun = Luftpost::Mailgun.new(MAILGUN_HASH)
+      @hash = {}
+      MAILGUN_MAPPING.each do |mailgun_name, attr_name|
+        @hash[attr_name] = MAILGUN_HASH[mailgun_name]
+      end
+      @hash[:clean_body_plain] = @mailgun.clean_body_plain
+      @hash[:clean_stripped_text] = @mailgun.clean_stripped_text
+    end
+
+    def test_retuns_an_attributes_hash
+      assert_equal(@hash,@mail.attributes)
+    end
+
+    def test_retuns_an_attributes_yaml
+      assert_equal(@hash.to_yaml,@mail.to_yaml)
+    end
+  end
 end

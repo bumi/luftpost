@@ -24,7 +24,7 @@ module Luftpost
     attr_accessor(*MAILGUN_MAPPING.values)
 
     def initialize(params)
-      self.params                   = params
+      self.params = params
       MAILGUN_MAPPING.each do |mailgun, attr|
         self.send("#{attr}=", params[mailgun])
       end
@@ -50,7 +50,7 @@ module Luftpost
     end
 
     def verified?
-      self.signature == OpenSSL::HMAC.hexdigest( OpenSSL::Digest::Digest.new('sha256'), Luftpost.config.mailgun_api_key, '%s%s' % [self.timestamp, self.token])
+      self.signature == OpenSSL::HMAC.hexdigest( OpenSSL::Digest::Digest.new('sha256'), Luftpost.config.mailgun_api_key.to_s, '%s%s' % [self.timestamp, self.token])
     end
 
     def clean_body_plain
@@ -63,12 +63,17 @@ module Luftpost
       self.clean_stripped_text.empty?
     end
 
-    def to_yaml
+    def attributes
       {}.tap { |hash|
-        MAIL_ACCESSORS.each do |attr|
+        MAILGUN_MAPPING.values.each do |attr|
           hash[attr] = self.send(attr)
         end
-      }.to_yml
+        hash[:clean_body_plain]    = self.clean_body_plain
+        hash[:clean_stripped_text] = self.clean_stripped_text
+      }
+    end
+    def to_yaml
+      attributes.to_yml
     end
 
   end
