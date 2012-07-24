@@ -38,22 +38,22 @@ module Luftpost
     end
 
     def from_email
-      self.from[/<(.+)>/,1] || self.from
+      self.from.to_s[/<(.+)>/,1] || self.from
     end
     def from_name
-      self.from[/(.+) <.+>/,1]
+      self.from.to_s[/(.+) <.+>/,1]
     end
     def to_email
-      self.to[/<(.+)>/,1] || self.to
+      self.to.to_s[/<(.+)>/,1] || self.to
     end
     def to_name
-      self.to[/(.+) <.+>/,1]
+      self.to.to_s[/(.+) <.+>/,1]
     end
     def cc_email
-      self.cc[/<(.+)>/,1] || self.cc
+      self.cc.to_s[/<(.+)>/,1] || self.cc
     end
     def cc_name
-      self.cc[/(.+) <.+>/,1]
+      self.cc.to_s[/(.+) <.+>/,1]
     end
 
     def verified?

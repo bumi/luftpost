@@ -22,6 +22,23 @@ class Luftpost::MailgunTest < MiniTest::Unit::TestCase
       assert_equal ["<ref1@gmail.com>","<ref2@gmail.com>"], @mailgun.referenced_message_ids
     end
 
+    def fallback_if_full_to_attribute_is_not_present
+      m = Luftpost::Mailgun.new({"To" => "thjs@amsterdam.com", "From" => "michael@railslove.com"})
+      assert_equal "thjs@amsterdam.com", m.to_email
+      assert_equal nil, m.to_name
+    end
+    def fallback_if_full_from_attribute_is_not_present
+      m = Luftpost::Mailgun.new({"To" => "thjs@amsterdam.com", "From" => "michael@railslove.com"})
+      assert_equal "michael@railslove.com", @mailgun.from_email
+      assert_equal nil, m.from_name
+    end
+  end
+
+  class Extraction < self
+    def setup
+      @mailgun = Luftpost::Mailgun.new(MAILGUN_HASH)
+    end
+    
     def test_extract_from_email
       assert_equal "michael@railslove.com", @mailgun.from_email
     end
@@ -40,17 +57,17 @@ class Luftpost::MailgunTest < MiniTest::Unit::TestCase
     def test_extract_cc_name
       assert_equal "cc basti", @mailgun.cc_name
     end
-    def fallback_if_full_to_attribute_is_not_present
-      m = Luftpost::Mailgun.new({"To" => "thjs@amsterdam.com", "From" => "michael@railslove.com"})
-      assert_equal "thjs@amsterdam.com", m.to_email
-      assert_equal nil, m.to_name
+
+    def test_allows_nil_values
+      mailgun = Luftpost::Mailgun.new({})
+      assert_equal nil, mailgun.from_email
+      assert_equal nil, mailgun.from_name
+      assert_equal nil, mailgun.to_email
+      assert_equal nil, mailgun.to_name
+      assert_equal nil, mailgun.cc_email
+      assert_equal nil, mailgun.cc_name
     end
-    def fallback_if_full_from_attribute_is_not_present
-      m = Luftpost::Mailgun.new({"To" => "thjs@amsterdam.com", "From" => "michael@railslove.com"})
-      assert_equal "michael@railslove.com", @mailgun.from_email
-      assert_equal nil, m.from_name
-    end
-  end
+  end  
 
   class TextProccessing < self
     def setup
