@@ -1,3 +1,4 @@
+require "yaml"
 module Luftpost
   class Mailgun
     attr_accessor :params, :attachments
@@ -48,6 +49,12 @@ module Luftpost
     def to_name
       self.to[/(.+) <.+>/,1]
     end
+    def cc_email
+      self.cc[/<(.+)>/,1] || self.cc
+    end
+    def cc_name
+      self.cc[/(.+) <.+>/,1]
+    end
 
     def verified?
       self.signature == OpenSSL::HMAC.hexdigest( OpenSSL::Digest::Digest.new('sha256'), Luftpost.config.mailgun_api_key.to_s, '%s%s' % [self.timestamp, self.token])
@@ -73,7 +80,7 @@ module Luftpost
       }
     end
     def to_yaml
-      attributes.to_yml
+      attributes.to_yaml
     end
 
   end

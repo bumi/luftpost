@@ -34,6 +34,12 @@ class Luftpost::MailgunTest < MiniTest::Unit::TestCase
     def test_extract_to_name
       assert_equal "Thjs Amsterdam", @mailgun.to_name
     end
+    def test_extract_cc_email
+      assert_equal "cc@amsterdam.com", @mailgun.cc_email
+    end
+    def test_extract_cc_name
+      assert_equal "cc basti", @mailgun.cc_name
+    end
     def fallback_if_full_to_attribute_is_not_present
       m = Luftpost::Mailgun.new({"To" => "thjs@amsterdam.com", "From" => "michael@railslove.com"})
       assert_equal "thjs@amsterdam.com", m.to_email
@@ -74,14 +80,15 @@ class Luftpost::MailgunTest < MiniTest::Unit::TestCase
       end
       @hash[:clean_body_plain] = @mailgun.clean_body_plain
       @hash[:clean_stripped_text] = @mailgun.clean_stripped_text
+      @hash[:referenced_message_ids] = ["<ref1@gmail.com>","<ref2@gmail.com>"]
     end
 
     def test_retuns_an_attributes_hash
-      assert_equal(@hash,@mail.attributes)
+      assert_equal(@hash, @mailgun.attributes)
     end
 
     def test_retuns_an_attributes_yaml
-      assert_equal(@hash.to_yaml,@mail.to_yaml)
+      assert_equal(@hash.to_yaml, @mailgun.to_yaml)
     end
   end
 end

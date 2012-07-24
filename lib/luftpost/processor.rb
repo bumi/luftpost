@@ -3,7 +3,7 @@ module Luftpost
     attr_accessor :text, :clean_text, :matches, :instructions, :ruleset
 
     def initialize(text, ruleset)
-      @text         = text
+      @text         = text.to_s
       @ruleset      = ruleset
       @instructions = {}
       @matches      = []
