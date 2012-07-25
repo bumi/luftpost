@@ -38,22 +38,22 @@ module Luftpost
     end
 
     def from_email
-      self.from.to_s[/<(.+)>/,1] || self.from
+      self.from.to_s[/<([^,|\s]+)>/,1] || self.from
     end
     def from_name
-      self.from.to_s[/(.+) <.+>/,1]
+      self.from.to_s[/(.+) <[^,|\s]+>/,1]
     end
-    def to_email
-      self.to.to_s[/<(.+)>/,1] || self.to
+    def to_emails
+      self.to.to_s.split(",").collect { |mail| (mail[/<([^,|\s]+)>/,1] || mail).strip }
     end
-    def to_name
-      self.to.to_s[/(.+) <.+>/,1]
+    def to_names
+      self.to.to_s.split(",").collect { |mail| mail[/(.+) <[^,|\s]+>/,1].to_s.strip }
     end
-    def cc_email
-      self.cc.to_s[/<(.+)>/,1] || self.cc
+    def cc_emails
+      self.cc.to_s.split(",").collect { |mail| (mail[/<([^,|\s]+)>/,1] || mail).strip }
     end
-    def cc_name
-      self.cc.to_s[/(.+) <.+>/,1]
+    def cc_names
+      self.cc.to_s.split(",").collect { |mail| mail[/(.+) <[^,|\s]+>/,1].to_s.strip }
     end
 
     def verified?

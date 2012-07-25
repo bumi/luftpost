@@ -1,3 +1,4 @@
+# encoding: utf-8
 require "test_helper"
 
 class Luftpost::MailgunTest < MiniTest::Unit::TestCase
@@ -46,26 +47,33 @@ class Luftpost::MailgunTest < MiniTest::Unit::TestCase
       assert_equal "Michael Koeln", @mailgun.from_name
     end
     def test_extract_to_email
-      assert_equal "thjs@amsterdam.com", @mailgun.to_email
+      assert_equal ["thjs@amsterdam.com"], @mailgun.to_emails
     end
     def test_extract_to_name
-      assert_equal "Thjs Amsterdam", @mailgun.to_name
+      assert_equal ["Thjs Amsterdam"], @mailgun.to_names
     end
     def test_extract_cc_email
-      assert_equal "cc@amsterdam.com", @mailgun.cc_email
+      assert_equal ["cc@amsterdam.com"], @mailgun.cc_emails
     end
     def test_extract_cc_name
-      assert_equal "cc basti", @mailgun.cc_name
+      assert_equal ["cc basti"], @mailgun.cc_names
     end
 
+    def test_mulit_cc_and_to_receipients
+      mailgun = Luftpost::Mailgun.new({"Cc" => "Lars Brillert <lars@railslove.com>, Railslove Team <team@railslove.com>", "To" => "Jenny de La Rock <rock@railslove.com>, fräddy blitz <fraeddy.blitz@railslove.com>"})
+      assert_equal ["rock@railslove.com", "fraeddy.blitz@railslove.com"], mailgun.to_emails
+      assert_equal ["Jenny de La Rock", "fräddy blitz"], mailgun.to_names
+      assert_equal ["lars@railslove.com", "team@railslove.com"], mailgun.cc_emails
+      assert_equal ["Lars Brillert", "Railslove Team"], mailgun.cc_names
+    end
     def test_allows_nil_values
       mailgun = Luftpost::Mailgun.new({})
       assert_equal nil, mailgun.from_email
       assert_equal nil, mailgun.from_name
-      assert_equal nil, mailgun.to_email
-      assert_equal nil, mailgun.to_name
-      assert_equal nil, mailgun.cc_email
-      assert_equal nil, mailgun.cc_name
+      assert_equal [], mailgun.to_emails
+      assert_equal [], mailgun.to_names
+      assert_equal [], mailgun.cc_emails
+      assert_equal [], mailgun.cc_names
     end
   end  
 
