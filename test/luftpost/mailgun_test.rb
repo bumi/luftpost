@@ -87,7 +87,17 @@ class Luftpost::MailgunTest < MiniTest::Unit::TestCase
       assert @mailgun_for_text_parsing.instructions_only?
     end
   end
-  
+
+  class Attachments < self
+    def setup
+      @mailgun = Luftpost::Mailgun.new({"attachment-count" => 2, "attachment-1" => 1, "attachment-2" => 2})
+    end
+    
+    def test_stores_attachments_to_attachments_array
+      assert_equal [1,2], @mailgun.attachments
+    end
+  end
+
   class Attributes < self
     def setup
       @mailgun = Luftpost::Mailgun.new(MAILGUN_HASH)

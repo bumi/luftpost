@@ -32,7 +32,7 @@ module Luftpost
       self.referenced_message_ids   = params["References"].to_s.split(" ")
       self.attachments              = []
 
-      params["attachment-count"].to_i.times do |i|
+      (1..params["attachment-count"].to_i).each do |i|
         self.attachments << params["attachment-#{i}"]
       end
     end
