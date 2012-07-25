@@ -49,13 +49,13 @@ class Luftpost::MailgunTest < MiniTest::Unit::TestCase
     def test_extract_to_email
       assert_equal ["thjs@amsterdam.com"], @mailgun.to_emails
     end
-    def test_extract_to_name
+    def test_extract_to_names
       assert_equal ["Thjs Amsterdam"], @mailgun.to_names
     end
-    def test_extract_cc_email
+    def test_extract_cc_emails
       assert_equal ["cc@amsterdam.com"], @mailgun.cc_emails
     end
-    def test_extract_cc_name
+    def test_extract_cc_names
       assert_equal ["cc basti"], @mailgun.cc_names
     end
 
