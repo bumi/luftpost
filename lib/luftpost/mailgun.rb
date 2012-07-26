@@ -44,16 +44,16 @@ module Luftpost
       self.from.to_s[/(.+) <[^,|\s]+>/,1]
     end
     def to_emails
-      self.to.to_s.split(",").collect { |mail| (mail[/<([^,|\s]+)>/,1] || mail).strip }
+      self.to.to_s.split(/[,|;]/).collect { |mail| (mail[/<([^,|\s]+)>/,1] || mail).strip }
     end
     def to_names
-      self.to.to_s.split(",").collect { |mail| mail[/(.+) <[^,|\s]+>/,1].to_s.strip }
+      self.to.to_s.split(/[,|;]/).collect { |mail| mail[/(.+) <[^,|\s]+>/,1].to_s.strip }
     end
     def cc_emails
-      self.cc.to_s.split(",").collect { |mail| (mail[/<([^,|\s]+)>/,1] || mail).strip }
+      self.cc.to_s.split(/[,|;]/).collect { |mail| (mail[/<([^,|\s]+)>/,1] || mail).strip }
     end
     def cc_names
-      self.cc.to_s.split(",").collect { |mail| mail[/(.+) <[^,|\s]+>/,1].to_s.strip }
+      self.cc.to_s.split(/[,|;]/).collect { |mail| mail[/(.+) <[^,|\s]+>/,1].to_s.strip }
     end
 
     def verified?

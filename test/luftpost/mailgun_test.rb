@@ -60,7 +60,7 @@ class Luftpost::MailgunTest < MiniTest::Unit::TestCase
     end
 
     def test_mulit_cc_and_to_receipients
-      mailgun = Luftpost::Mailgun.new({"Cc" => "Lars Brillert <lars@railslove.com>, Railslove Team <team@railslove.com>", "To" => "Jenny de La Rock <rock@railslove.com>, fräddy blitz <fraeddy.blitz@railslove.com>"})
+      mailgun = Luftpost::Mailgun.new({"Cc" => "Lars Brillert <lars@railslove.com>; Railslove Team <team@railslove.com>", "To" => "Jenny de La Rock <rock@railslove.com>, fräddy blitz <fraeddy.blitz@railslove.com>"})
       assert_equal ["rock@railslove.com", "fraeddy.blitz@railslove.com"], mailgun.to_emails
       assert_equal ["Jenny de La Rock", "fräddy blitz"], mailgun.to_names
       assert_equal ["lars@railslove.com", "team@railslove.com"], mailgun.cc_emails
