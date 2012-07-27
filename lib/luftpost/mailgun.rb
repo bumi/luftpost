@@ -1,5 +1,6 @@
 require "yaml"
 require "mail"
+require "i18n"
 module Luftpost
   class Mailgun
     attr_accessor :params, :attachments
@@ -38,23 +39,24 @@ module Luftpost
       end
     end
 
+    # transliteration in the following is a stupid hack because the mail maillist parser does not like umlauts: https://github.com/mikel/mail/issues/39
     def from_email
-      @from_email ||= Mail::AddressList.new(self.from).addresses.map(&:address).first
+      @from_email ||= Mail::AddressList.new(I18n.transliterate(self.from.to_s)).addresses.map(&:address).first
     end
     def from_name
-      @from_name ||= Mail::AddressList.new(self.from).addresses.map(&:name).first
+      @from_name ||= Mail::AddressList.new(I18n.transliterate(self.from.to_s)).addresses.map(&:name).first
     end
     def to_emails
-      @to_emails ||= Mail::AddressList.new(self.to).addresses.map(&:address)
+      @to_emails ||= Mail::AddressList.new(I18n.transliterate(self.to.to_s)).addresses.map(&:address)
     end
     def to_names
-      @to_names ||= Mail::AddressList.new(self.to).addresses.map(&:name)
+      @to_names ||= Mail::AddressList.new(I18n.transliterate(self.to.to_s)).addresses.map(&:name)
     end
     def cc_emails
-      @cc_emails ||= Mail::AddressList.new(self.cc).addresses.map(&:address)
+      @cc_emails ||= Mail::AddressList.new(I18n.transliterate(self.cc.to_s)).addresses.map(&:address)
     end
     def cc_names
-      @cc_names ||= Mail::AddressList.new(self.cc).addresses.map(&:name)
+      @cc_names ||= Mail::AddressList.new(I18n.transliterate(self.cc.to_s)).addresses.map(&:name)
     end
 
     def verified?

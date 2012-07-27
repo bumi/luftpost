@@ -60,12 +60,21 @@ class Luftpost::MailgunTest < MiniTest::Unit::TestCase
     end
 
     def test_mulit_cc_and_to_receipients
-      mailgun = Luftpost::Mailgun.new({"Cc" => "Lars Brillert <lars@railslove.com>, Railslove Team <team@railslove.com>", "To" => 'Jenny de La Rock <rock@railslove.com>, freddy blitz <fraeddy.blitz@railslove.com>'})
+      mailgun = Luftpost::Mailgun.new({"Cc" => "Lärs Brillert <lars@railslove.com>, Railslove Team <team@railslove.com>", "To" => 'Jenny de Lá Röck <rock@railslove.com>, freddy blitz <fraeddy.blitz@railslove.com>'})
       assert_equal ["rock@railslove.com", "fraeddy.blitz@railslove.com"], mailgun.to_emails
       assert_equal ["Jenny de La Rock", "freddy blitz"], mailgun.to_names
       assert_equal ["lars@railslove.com", "team@railslove.com"], mailgun.cc_emails
       assert_equal ["Lars Brillert", "Railslove Team"], mailgun.cc_names
     end
+    # transliteration is a stupid hack because the mail maillist parser does not like umlauts: https://github.com/mikel/mail/issues/39
+    def test_tansliterate_umlaut_values
+      mailgun = Luftpost::Mailgun.new({"Cc" => "Lärs Brillert <lars@railslove.com>", "To" => 'Jenny de Lá Röck <rock@railslove.com>, fräddy blitz <fraeddy.blitz@railslove.com>'})
+      assert_equal ["rock@railslove.com", "fraeddy.blitz@railslove.com"], mailgun.to_emails
+      assert_equal ["Jenny de La Rock", "fraddy blitz"], mailgun.to_names
+      assert_equal ["lars@railslove.com"], mailgun.cc_emails
+      assert_equal ["Lars Brillert"], mailgun.cc_names
+    end
+
     def test_allows_nil_values
       mailgun = Luftpost::Mailgun.new({})
       assert_equal nil, mailgun.from_email

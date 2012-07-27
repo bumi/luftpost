@@ -19,4 +19,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'hashr', '~> 0.0.21'
   gem.add_dependency 'json'
   gem.add_dependency 'mail'
+  gem.add_dependency 'i18n'
 end
