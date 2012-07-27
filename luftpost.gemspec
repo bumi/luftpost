@@ -18,4 +18,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'webmock'
   gem.add_dependency 'hashr', '~> 0.0.21'
   gem.add_dependency 'json'
+  gem.add_dependency 'mail'
 end

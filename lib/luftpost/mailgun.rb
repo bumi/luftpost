@@ -1,4 +1,5 @@
 require "yaml"
+require "mail"
 module Luftpost
   class Mailgun
     attr_accessor :params, :attachments
@@ -38,22 +39,22 @@ module Luftpost
     end
 
     def from_email
-      self.from.to_s[/<([^,|\s]+)>/,1] || self.from
+      @from_email ||= Mail::AddressList.new(self.from).addresses.map(&:address).first
     end
     def from_name
-      self.from.to_s[/(.+) <[^,|\s]+>/,1]
+      @from_name ||= Mail::AddressList.new(self.from).addresses.map(&:name).first
     end
     def to_emails
-      self.to.to_s.split(/[,|;]/).collect { |mail| (mail[/<([^,|\s]+)>/,1] || mail).strip }
+      @to_emails ||= Mail::AddressList.new(self.to).addresses.map(&:address)
     end
     def to_names
-      self.to.to_s.split(/[,|;]/).collect { |mail| mail[/(.+) <[^,|\s]+>/,1].to_s.strip }
+      @to_names ||= Mail::AddressList.new(self.to).addresses.map(&:name)
     end
     def cc_emails
-      self.cc.to_s.split(/[,|;]/).collect { |mail| (mail[/<([^,|\s]+)>/,1] || mail).strip }
+      @cc_emails ||= Mail::AddressList.new(self.cc).addresses.map(&:address)
     end
     def cc_names
-      self.cc.to_s.split(/[,|;]/).collect { |mail| mail[/(.+) <[^,|\s]+>/,1].to_s.strip }
+      @cc_names ||= Mail::AddressList.new(self.cc).addresses.map(&:name)
     end
 
     def verified?
