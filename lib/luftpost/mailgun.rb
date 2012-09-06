@@ -63,23 +63,11 @@ module Luftpost
       self.signature == OpenSSL::HMAC.hexdigest( OpenSSL::Digest::Digest.new('sha256'), Luftpost.config.mailgun_api_key.to_s, '%s%s' % [self.timestamp, self.token])
     end
 
-    def clean_body_plain
-      @clean_body_plain ||= Luftpost::Processor.new(self.body_plain, Luftpost.config.ruleset).clean_text
-    end
-    def clean_stripped_text
-      @clean_stripped_text ||= Luftpost::Processor.new(self.stripped_text, Luftpost.config.ruleset).clean_text
-    end
-    def instructions_only?
-      self.clean_stripped_text.empty?
-    end
-
     def attributes
       {}.tap { |hash|
         MAILGUN_MAPPING.values.each do |attr|
           hash[attr] = self.send(attr)
         end
-        hash[:clean_body_plain]    = self.clean_body_plain
-        hash[:clean_stripped_text] = self.clean_stripped_text
       }
     end
     def to_yaml

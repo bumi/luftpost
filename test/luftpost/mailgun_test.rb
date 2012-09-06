@@ -39,7 +39,7 @@ class Luftpost::MailgunTest < MiniTest::Unit::TestCase
     def setup
       @mailgun = Luftpost::Mailgun.new(MAILGUN_HASH)
     end
-    
+
     def test_extract_from_email
       assert_equal "michael@railslove.com", @mailgun.from_email
     end
@@ -84,32 +84,13 @@ class Luftpost::MailgunTest < MiniTest::Unit::TestCase
       assert_equal [], mailgun.cc_emails
       assert_equal [], mailgun.cc_names
     end
-  end  
-
-  class TextProccessing < self
-    def setup
-      Luftpost.config.ruleset.on :status do |object,command,value|
-        value
-      end
-      @mailgun_for_text_parsing = Luftpost::Mailgun.new({"stripped-text" => "status: foo", "body-plain" => "status: foo\r\n\r\n--\nmichael"})
-    end
-
-    def test_clean_stripped_text
-      assert_equal "", @mailgun_for_text_parsing.clean_stripped_text
-    end
-    def test_clean_body_plain
-      assert_equal "--\nmichael", @mailgun_for_text_parsing.clean_body_plain
-    end
-    def test_instructions_only_check
-      assert @mailgun_for_text_parsing.instructions_only?
-    end
   end
 
   class Attachments < self
     def setup
       @mailgun = Luftpost::Mailgun.new({"attachment-count" => 2, "attachment-1" => 1, "attachment-2" => 2})
     end
-    
+
     def test_stores_attachments_to_attachments_array
       assert_equal [1,2], @mailgun.attachments
     end
@@ -122,8 +103,6 @@ class Luftpost::MailgunTest < MiniTest::Unit::TestCase
       MAILGUN_MAPPING.each do |mailgun_name, attr_name|
         @hash[attr_name] = MAILGUN_HASH[mailgun_name]
       end
-      @hash[:clean_body_plain] = @mailgun.clean_body_plain
-      @hash[:clean_stripped_text] = @mailgun.clean_stripped_text
       @hash[:referenced_message_ids] = ["<ref1@gmail.com>","<ref2@gmail.com>"]
     end
 
